@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.example.employee.dto.EmployeeDTO;
 
 @Entity
 @Table(name="employees")

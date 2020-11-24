@@ -51,9 +51,13 @@ public class EmployeeDetailsController {
 	
 	@PutMapping(value="/updatePhoneNo/{employeeId}/{phoneNumber}")
 	public String updatePhoneNumber(@PathVariable String phoneNumber, @PathVariable String employeeId) {
+		try {
 		logger.info("Request to Update PhoneNumber{}", phoneNumber);
 		employeeService.updatePhoneNumber(phoneNumber, employeeId);
 		return environmnet.getProperty("PhoneNumberUpdated");
+		}catch(Exception e) {
+			return environmnet.getProperty(e.getMessage());
+		}
 	}
 	@DeleteMapping(value="/delete/{employeeId}")
 	public String deleteEmployee(@PathVariable String employeeId) {

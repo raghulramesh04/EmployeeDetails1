@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.employee.dto.EmployeeDTO;
 import com.example.employee.entity.EmployeeEntity;
 import com.example.employee.repository.EmployeeRepository;
+import com.example.employee.validator.validator;
 @Service
 public class EmployeeService {
 	
@@ -31,22 +32,28 @@ public class EmployeeService {
 
 	public void addEmployee(EmployeeDTO employeeDTO) throws Exception{
 		logger.info("Adding new Employee {}", employeeDTO);
-		String Id= employeeDTO.getEmployeeId();
-		if(employeeRepository.findById(Id).isPresent()) {
+		validator.validateEmployee(employeeDTO);
+		String id= employeeDTO.getEmployeeId();
+		if(employeeRepository.findById(id).isPresent()) {
 			throw new Exception("EmployeeAlreadyPresent");
 		}else {
 		EmployeeEntity entity= employeeDTO.createEntity();
 		employeeRepository.save(entity);
 		}
+		
 	}
 
-	public void updatePhoneNumber(String phoneNumber, String Id) {
-		logger.info("Request to Update PhoneNumber{}", Id);
-		Optional<EmployeeEntity> entity= employeeRepository.findById(Id);
-		if(entity.isPresent()) {
-			EmployeeEntity employee= entity.get();
-			employee.setPhoneNumber(phoneNumber);
-			employeeRepository.save(employee);
+	public void updatePhoneNumber(String phoneNumber, String id) throws Exception {
+		logger.info("Request to Update PhoneNumber{}", id);
+		Optional<EmployeeEntity> entity= employeeRepository.findById(id);
+		if(validator.validatePhoneNo(phoneNumber)) {
+			if(entity.isPresent()) {
+				EmployeeEntity employee= entity.get();
+				employee.setPhoneNumber(phoneNumber);
+				employeeRepository.save(employee);
+			}
+		}else {
+			throw new Exception("InvalidPhoneNumber");
 		}
 	}
 
